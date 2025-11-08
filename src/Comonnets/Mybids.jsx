@@ -5,30 +5,39 @@ const Mybids = () => {
   const [mybid, setMybid] = useState([]);
 
   const { user } = useContext(Authcontext);
+
+  // console.log(user.accessToken);
   useEffect(() => {
-    fetch(`http://localhost:3000/bids?email=${user.email}`)
+  if (!user?.email || !user?.accessToken) return; // 🔒 safe check
+
+  fetch(`http://localhost:3000/bids?email=${user.email}`, {
+    headers: {
+      authorization: `Bearer ${user.accessToken}`,
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      setMybid(data);
+    });
+}, [user?.email, user?.accessToken]);
+
+
+  const handleremovebid = (id) => {
+    fetch(`http://localhost:3000/bids/${id}`, {
+      method: "DELETE",
+    })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setMybid(data);
-      });
-  }, [user.email]);
-
-  const handleremovebid = (id) =>{
-    fetch(`http://localhost:3000/bids/${id}`,{
-        method: 'DELETE',
-    })
-    .then(res => res.json())
-    .then(data => {
-        console.log(data);
-        if(data.deletedCount > 0){
-          const remingingbid  = mybid.filter(bid => bid._id === id)
-          setMybid(remingingbid)
+        if (data.deletedCount > 0) {
+          const remingingbid = mybid.filter((bid) => bid._id === id);
+          setMybid(remingingbid);
         }
-    })
-  }
+      });
+  };
 
-//   console.log(mybid);
+  //   console.log(mybid);
 
   return (
     <div className="text-center">
@@ -91,7 +100,10 @@ const Mybids = () => {
                                 <button className="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 transition">
                                   Accept Offer
                                 </button>
-                                <button onClick={() => handleremovebid(bid._id)} className="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition">
+                                <button
+                                  onClick={() => handleremovebid(bid._id)}
+                                  className="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition"
+                                >
                                   Reject Offer
                                 </button>
                               </div>
