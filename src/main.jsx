@@ -13,6 +13,7 @@ import Regester from './Comonnets/Regester.jsx'
 import Privateroute from './PrivateRoute/Privateroute.jsx'
 import Productdetils from './Comonnets/Productdetils.jsx'
 import Mybids from './Comonnets/Mybids.jsx'
+import CreateaProduct from './Comonnets/CreateaProduct.jsx'
 
 
 const router  = createBrowserRouter([
@@ -44,7 +45,11 @@ const router  = createBrowserRouter([
       {
         path: '/mybids',
         element: <Privateroute><Mybids></Mybids></Privateroute>,
-      }
+      },
+      {
+        path: '/createaproduct',
+        element: <Privateroute><CreateaProduct></CreateaProduct></Privateroute>,
+      },
     ]
   }
 ])

@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useLoaderData } from "react-router";
+import { data, useLoaderData } from "react-router";
 import Authcontext from "../Authcontext/Authcontext";
 import Swal from "sweetalert2";
+import axios from 'axios';
 import Bidlistforeachproduct from "./Bidlistforeachproduct";
 
 
@@ -35,12 +36,9 @@ const Productdetils = () => {
 
   
   useEffect(() => {
-    fetch(`http://localhost:3000/product/bid/${_id}`)
-    .then(res => res.json())
-    .then(data => {
-        console.log(data)
-        setBid(data)
-    })
+   axios.get(`http://localhost:3000/product/bid/${_id}`)
+   .then(data => console.log(data.data))
+   setBid(data.data);
   }, [_id])
 
 
